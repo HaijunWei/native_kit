@@ -91,7 +91,7 @@ class ScreenBrightnessControl : MethodChannel.MethodCallHandler {
      * 设置当前屏幕亮度
      */
     fun setBrightness(@NonNull call: MethodCall, @NonNull result: MethodChannel.Result) {
-        val brightness: Float? = call.argument("brightness")
+        val brightness: Double? = call.argument("brightness")
         if (brightness == null) {
             result.error("-1", "brightness cannot be empty", "brightness cannot be empty")
             return
@@ -99,7 +99,7 @@ class ScreenBrightnessControl : MethodChannel.MethodCallHandler {
 
         val localWindow: Window? = activityBinding?.activity?.window
         val localLayoutParams: WindowManager.LayoutParams? = localWindow?.attributes
-        localLayoutParams?.screenBrightness = brightness
+        localLayoutParams?.screenBrightness = brightness.toFloat()
         localWindow?.attributes = localLayoutParams
 
         result.success(null)
