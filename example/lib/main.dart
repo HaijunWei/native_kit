@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'dart:async';
 
@@ -24,20 +26,22 @@ class _MyAppState extends State<MyApp> {
 
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
-    _volume= await VolumeControl.volume;
+    _volume = await VolumeControl.volume;
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Plugin example app'),
+    return
+      MaterialApp(
+        home: Scaffold(
+          appBar: AppBar(
+            title: const Text('Plugin example app'),
+          ),
+          body: Center(
+              child: Text('volume on: $_volume\n'),
+          ),
         ),
-        body: Center(
-          child: Text('volume on: $_volume\n'),
-        ),
-      ),
-    );
+      );
   }
 }
