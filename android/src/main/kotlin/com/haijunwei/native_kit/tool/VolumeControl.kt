@@ -36,8 +36,6 @@ class VolumeControl : MethodCallHandler {
         filter.addAction("android.media.VOLUME_CHANGED_ACTION")
         context.registerReceiver(volumeReceiver, filter)
 
-        Log.d("VolumeControl","registerReceiver----------------------------------------")
-
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, "com.haijunwei.native_kit/volume_control")
         channel.setMethodCallHandler(this)
     }
@@ -101,13 +99,12 @@ class VolumeControl : MethodCallHandler {
      */
     private inner class VolumeReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            Log.d("VolumeControl","onReceive----------------------------------------${intent.action}")
             if (intent.action == "android.media.VOLUME_CHANGED_ACTION") {
                 val max: Int = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
                 val current: Int = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC)
                 var map = hashMapOf<String, Any>()
                 map["volume"] = current.toDouble() / max.toDouble()
-                channel.invokeMethod("volumeDidChange", map)
+                channel.invokeMethod("volumeDidChange", current.toDouble() / max.toDouble())
             }
         }
     }
