@@ -25,7 +25,7 @@ class NativeKitPlugin : FlutterPlugin, ActivityAware {
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         AppInstaller.instance.onAttachedToEngine(flutterPluginBinding)
         VolumeControl.instance.onAttachedToEngine(flutterPluginBinding)
-        ScreenBrightnessControl.instance.onAttachedToEngine(flutterPluginBinding,activityBinding)
+        ScreenBrightnessControl.instance.onAttachedToEngine(flutterPluginBinding)
     }
 
     override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
@@ -45,6 +45,7 @@ class NativeKitPlugin : FlutterPlugin, ActivityAware {
 
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {
         activityBinding = binding
+        ScreenBrightnessControl.instance.setActivityBinding(activityBinding)
     }
 
     override fun onDetachedFromActivityForConfigChanges() {

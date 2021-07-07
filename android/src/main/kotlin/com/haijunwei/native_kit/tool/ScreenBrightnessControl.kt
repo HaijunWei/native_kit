@@ -34,9 +34,12 @@ class ScreenBrightnessControl : MethodChannel.MethodCallHandler {
         }
     }
 
-    fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding, activityBinding: ActivityPluginBinding?) {
-        context = flutterPluginBinding.applicationContext
+    fun setActivityBinding(activityBinding: ActivityPluginBinding?) {
         this.activityBinding = activityBinding
+    }
+
+    fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
+        context = flutterPluginBinding.applicationContext
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, "com.haijunwei.native_kit/screen_brightness_control")
         channel?.setMethodCallHandler(this)
 
@@ -98,7 +101,7 @@ class ScreenBrightnessControl : MethodChannel.MethodCallHandler {
             return
         }
 
-        Log.d("setBrightness","brightness->${brightness.toFloat()}")
+        Log.d("setBrightness", "brightness->${brightness.toFloat()}")
         val localWindow: Window? = activityBinding?.activity?.window
         val localLayoutParams: WindowManager.LayoutParams? = localWindow?.attributes
         localLayoutParams?.screenBrightness = brightness.toFloat()
