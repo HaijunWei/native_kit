@@ -15,6 +15,22 @@ class VolumeControl {
   static const MethodChannel _channel =
       const MethodChannel('com.haijunwei.native_kit/volume_control');
 
+  static StreamController<double> _streamController =
+      StreamController.broadcast();
+
+  /// 音量监听流
+  static Stream<double> get stream {
+    _channel.setMethodCallHandler(_methodCallHandler);
+    return _streamController.stream;
+  }
+
+  static Future<dynamic> _methodCallHandler(call) async {
+    if (call.method == 'volumeDidChange') {
+      double volume = call.arguments['volume'];
+      _streamController.add(volume);
+    }
+  }
+
   /// 获取系统当前音量，取值 0 - 1
   static Future<double> get volume async {
     final double? volume = await _channel.invokeMethod('getVolume');
