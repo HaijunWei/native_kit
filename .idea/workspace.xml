@@ -5,13 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="112017b2-7524-4da1-aef2-c4b2a830d44e" name="默认的" comment="">
-      <change afterPath="$PROJECT_DIR$/android/src/main/kotlin/com/haijunwei/native_kit/tool/AppInstaller.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/android/src/main/kotlin/com/haijunwei/native_kit/tool/VolumeControl.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/kotlin/com/haijunwei/native_kit/NativeKitPlugin.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/kotlin/com/haijunwei/native_kit/NativeKitPlugin.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/main/kotlin/com/haijunwei/native_kit/tool/VolumeControl.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/kotlin/com/haijunwei/native_kit/tool/VolumeControl.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/example/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/native_kit.iml" beforeDir="false" afterPath="$PROJECT_DIR$/native_kit.iml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,9 +44,25 @@
       <option name="presentableId" value="Default" />
       <updated>1625623256883</updated>
     </task>
+    <task id="LOCAL-00001" summary="1">
+      <created>1625637657523</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1625637657523</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="1" />
+    <option name="LAST_COMMIT_MESSAGE" value="1" />
+  </component>
   <component name="WindowStateProjectService">
+    <state x="556" y="7" key="CommitChangelistDialog2" timestamp="1625637656832">
+      <screen x="0" y="0" width="1920" height="1032" />
+    </state>
+    <state x="556" y="7" key="CommitChangelistDialog2/0.0.1920.1032/-1920.0.1920.1080@0.0.1920.1032" timestamp="1625637656832" />
     <state width="1865" height="264" key="GridCell.Tab.0.bottom" timestamp="1625626776584">
       <screen x="0" y="0" width="1920" height="1032" />
     </state>
@@ -67,5 +79,13 @@
       <screen x="0" y="0" width="1920" height="1032" />
     </state>
     <state width="1865" height="264" key="GridCell.Tab.0.right/0.0.1920.1032/-1920.0.1920.1080@0.0.1920.1032" timestamp="1625626776584" />
+    <state x="452" y="168" key="Vcs.Push.Dialog.v2" timestamp="1625637660071">
+      <screen x="0" y="0" width="1920" height="1032" />
+    </state>
+    <state x="452" y="168" key="Vcs.Push.Dialog.v2/0.0.1920.1032/-1920.0.1920.1080@0.0.1920.1032" timestamp="1625637660071" />
+    <state x="532" y="235" key="run.anything.popup" timestamp="1625638404264">
+      <screen x="0" y="0" width="1920" height="1032" />
+    </state>
+    <state x="532" y="235" key="run.anything.popup/0.0.1920.1032/-1920.0.1920.1080@0.0.1920.1032" timestamp="1625638404264" />
   </component>
 </project>
