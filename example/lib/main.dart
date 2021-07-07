@@ -14,7 +14,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _platformVersion = 'Unknown';
+  double _volume = 0.0;
 
   @override
   void initState() {
@@ -23,7 +23,9 @@ class _MyAppState extends State<MyApp> {
   }
 
   // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {}
+  Future<void> initPlatformState() async {
+    _volume= await VolumeControl.volume;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +35,7 @@ class _MyAppState extends State<MyApp> {
           title: const Text('Plugin example app'),
         ),
         body: Center(
-          child: Text('Running on: $_platformVersion\n'),
+          child: Text('volume on: $_volume\n'),
         ),
       ),
     );
