@@ -59,7 +59,6 @@ class AppInstaller : MethodCallHandler {
         }
 
         context?.apply {
-            //兼容8.0
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 // 判断是否有权限
                 val haveInstallPermission: Boolean = packageManager.canRequestPackageInstalls()

@@ -4,6 +4,7 @@ import android.content.Context
 import android.database.ContentObserver
 import android.os.Handler
 import android.provider.Settings
+import android.util.Log
 import android.view.Window
 import android.view.WindowManager
 import androidx.annotation.NonNull
@@ -97,6 +98,7 @@ class ScreenBrightnessControl : MethodChannel.MethodCallHandler {
             return
         }
 
+        Log.d("setBrightness","brightness->${brightness.toFloat()}")
         val localWindow: Window? = activityBinding?.activity?.window
         val localLayoutParams: WindowManager.LayoutParams? = localWindow?.attributes
         localLayoutParams?.screenBrightness = brightness.toFloat()
