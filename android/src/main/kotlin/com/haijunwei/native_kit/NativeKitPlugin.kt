@@ -23,11 +23,6 @@ class NativeKitPlugin : FlutterPlugin, ActivityAware {
     private var activityBinding: ActivityPluginBinding? = null
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-        channel = MethodChannel(flutterPluginBinding.binaryMessenger, "native_kit")
-        channel.setMethodCallHandler { call, result ->
-
-        }
-
         AppInstaller.instance.onAttachedToEngine(flutterPluginBinding)
         VolumeControl.instance.onAttachedToEngine(flutterPluginBinding)
         ScreenBrightnessControl.instance.onAttachedToEngine(flutterPluginBinding,activityBinding)
