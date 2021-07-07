@@ -48,3 +48,39 @@ class VolumeControl {
     await _channel.invokeMethod('hideUI', {'hide': hide});
   }
 }
+
+class ScreenBrightnessControl {
+  static const MethodChannel _channel =
+      const MethodChannel('com.haijunwei.native_kit/screen_brightness_control');
+
+  static StreamController<double> _streamController =
+      StreamController.broadcast();
+
+  /// 音量监听流
+  static Stream<double> get stream {
+    _channel.setMethodCallHandler(_methodCallHandler);
+    return _streamController.stream;
+  }
+
+  static Future<dynamic> _methodCallHandler(call) async {
+    if (call.method == 'brightnessDidChange') {
+      double volume = call.arguments['brightness'];
+      _streamController.add(volume);
+    }
+  }
+
+  /// 设置亮度，取值 0 - 1
+  static Future<void> setBrightness(double brightness) async {
+    await _channel.invokeMethod('setBrightness', {'brightness': brightness});
+  }
+
+  /// 记录当前亮度
+  static Future<void> record() async {
+    await _channel.invokeMethod('record');
+  }
+
+  /// 还原上次记录的亮度
+  static Future<void> restore() async {
+    await _channel.invokeMethod('restore');
+  }
+}
