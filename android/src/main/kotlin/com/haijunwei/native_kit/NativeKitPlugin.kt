@@ -2,6 +2,7 @@ package com.haijunwei.native_kit
 
 import androidx.annotation.NonNull
 import com.haijunwei.native_kit.tool.AppInstaller
+import com.haijunwei.native_kit.tool.ScreenBrightnessControl
 import com.haijunwei.native_kit.tool.VolumeControl
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin
@@ -26,11 +27,13 @@ class NativeKitPlugin: FlutterPlugin {
 
     AppInstaller.instance.onAttachedToEngine(flutterPluginBinding)
     VolumeControl.instance.onAttachedToEngine(flutterPluginBinding)
+    ScreenBrightnessControl.instance.onAttachedToEngine(flutterPluginBinding)
   }
 
   override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
     channel.setMethodCallHandler(null)
     AppInstaller.instance.onDetachedFromEngine(binding)
     VolumeControl.instance.onDetachedFromEngine(binding)
+    ScreenBrightnessControl.instance.onDetachedFromEngine(binding)
   }
 }

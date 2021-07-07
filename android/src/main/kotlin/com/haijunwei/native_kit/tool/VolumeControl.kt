@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.media.AudioManager
+import android.util.Log
 import androidx.annotation.NonNull
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodCall
@@ -17,15 +18,7 @@ import kotlin.math.roundToInt
 class VolumeControl : MethodCallHandler {
     private lateinit var channel: MethodChannel
     private lateinit var context: Context
-    private val audioManager by lazy {
-        // 注册音量监听
-        val volumeReceiver = VolumeReceiver()
-        val filter = IntentFilter()
-        filter.addAction("android.media.VOLUME_CHANGED_ACTION")
-        context.registerReceiver(volumeReceiver, filter)
-
-        context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
-    }
+    private val audioManager by lazy { context.getSystemService(Context.AUDIO_SERVICE) as AudioManager }
     private var hideUI: Boolean = false
 
     companion object {
@@ -36,6 +29,15 @@ class VolumeControl : MethodCallHandler {
 
     fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         this.context = flutterPluginBinding.applicationContext
+
+        // 注册音量监听
+        val volumeReceiver = VolumeReceiver()
+        val filter = IntentFilter()
+        filter.addAction("android.media.VOLUME_CHANGED_ACTION")
+        context.registerReceiver(volumeReceiver, filter)
+
+        Log.d("VolumeControl","registerReceiver----------------------------------------")
+
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, "com.haijunwei.native_kit/volume_control")
         channel.setMethodCallHandler(this)
     }
@@ -53,7 +55,6 @@ class VolumeControl : MethodCallHandler {
                 setStreamVolume(call, result)
             }
             "hideUI" -> {
-                //设置音量时隐藏/显示系统音量UI
                 hideUI(call, result)
             }
             else -> {
@@ -100,6 +101,7 @@ class VolumeControl : MethodCallHandler {
      */
     private inner class VolumeReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
+            Log.d("VolumeControl","onReceive----------------------------------------${intent.action}")
             if (intent.action == "android.media.VOLUME_CHANGED_ACTION") {
                 val max: Int = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
                 val current: Int = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC)

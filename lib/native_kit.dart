@@ -56,7 +56,7 @@ class ScreenBrightnessControl {
   static StreamController<double> _streamController =
       StreamController.broadcast();
 
-  /// 音量监听流
+  /// 屏幕亮度监听流
   static Stream<double> get stream {
     _channel.setMethodCallHandler(_methodCallHandler);
     return _streamController.stream;
