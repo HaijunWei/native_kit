@@ -33,13 +33,13 @@ class ScreenBrightnessControl : MethodChannel.MethodCallHandler {
         }
     }
 
-    fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding, activityBinding: ActivityPluginBinding) {
+    fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding, activityBinding: ActivityPluginBinding?) {
         context = flutterPluginBinding.applicationContext
         this.activityBinding = activityBinding
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, "com.haijunwei.native_kit/screen_brightness_control")
         channel?.setMethodCallHandler(this)
 
-        activityBinding.activity.contentResolver.registerContentObserver(
+        activityBinding?.activity?.contentResolver?.registerContentObserver(
                 Settings.System.getUriFor(Settings.System.SCREEN_BRIGHTNESS), true,
                 mBrightnessObserver)
     }
