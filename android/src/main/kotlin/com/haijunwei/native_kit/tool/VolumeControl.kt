@@ -17,9 +17,11 @@ import kotlin.math.roundToInt
 
 class VolumeControl : MethodCallHandler {
     private lateinit var channel: MethodChannel
-    private lateinit var context: Context
-    private val audioManager by lazy { context.getSystemService(Context.AUDIO_SERVICE) as AudioManager }
+    private  var context: Context?=null
+    private val audioManager by lazy { context?.getSystemService(Context.AUDIO_SERVICE) as AudioManager }
     private var hideUI: Boolean = false
+    // 注册音量监听
+    private val volumeReceiver = VolumeReceiver()
 
     companion object {
         val instance: VolumeControl by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
@@ -30,11 +32,10 @@ class VolumeControl : MethodCallHandler {
     fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         this.context = flutterPluginBinding.applicationContext
 
-        // 注册音量监听
-        val volumeReceiver = VolumeReceiver()
+
         val filter = IntentFilter()
         filter.addAction("android.media.VOLUME_CHANGED_ACTION")
-        context.registerReceiver(volumeReceiver, filter)
+        context?.registerReceiver(volumeReceiver, filter)
 
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, "com.haijunwei.native_kit/volume_control")
         channel.setMethodCallHandler(this)
@@ -42,6 +43,7 @@ class VolumeControl : MethodCallHandler {
 
     fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
         channel.setMethodCallHandler(null)
+        context?.unregisterReceiver(volumeReceiver)
     }
 
     override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
@@ -104,7 +106,7 @@ class VolumeControl : MethodCallHandler {
                 val current: Int = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC)
                 var map = hashMapOf<String, Any>()
                 map["volume"] = current.toDouble() / max.toDouble()
-                channel.invokeMethod("volumeDidChange", current.toDouble() / max.toDouble())
+                channel.invokeMethod("volumeDidChange", map)
             }
         }
     }
