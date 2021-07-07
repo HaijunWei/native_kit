@@ -56,7 +56,7 @@ class ScreenBrightnessControl {
   static StreamController<double> _streamController =
       StreamController.broadcast();
 
-  /// 音量监听流
+  /// 亮度监听流
   static Stream<double> get stream {
     _channel.setMethodCallHandler(_methodCallHandler);
     return _streamController.stream;
@@ -67,6 +67,12 @@ class ScreenBrightnessControl {
       double volume = call.arguments['brightness'];
       _streamController.add(volume);
     }
+  }
+
+  /// 获取屏幕亮度，取值 0 - 1
+  static Future<double> get brightness async {
+    final double? brightness = await _channel.invokeMethod('getBrightness');
+    return brightness ?? 0;
   }
 
   /// 设置亮度，取值 0 - 1
