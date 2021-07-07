@@ -69,6 +69,12 @@ class ScreenBrightnessControl {
     }
   }
 
+  /// 获取屏幕亮度，取值 0 - 1
+  static Future<double> get brightness async {
+    final double? brightness = await _channel.invokeMethod('getBrightness');
+    return brightness ?? 0;
+  }
+
   /// 设置亮度，取值 0 - 1
   static Future<void> setBrightness(double brightness) async {
     await _channel.invokeMethod('setBrightness', {'brightness': brightness});
