@@ -72,6 +72,9 @@ class ScreenBrightnessControl : MethodChannel.MethodCallHandler {
             "restore" -> {
                 restore(call, result)
             }
+            "setEnabledAutoKeep" -> {
+                setEnabledAutoKeep(call, result)
+            }
             else -> {
                 result.notImplemented()
             }
@@ -101,7 +104,6 @@ class ScreenBrightnessControl : MethodChannel.MethodCallHandler {
             return
         }
 
-        Log.d("setBrightness", "brightness->${brightness.toFloat()}")
         val localWindow: Window? = activityBinding?.activity?.window
         val localLayoutParams: WindowManager.LayoutParams? = localWindow?.attributes
         localLayoutParams?.screenBrightness = brightness.toFloat()
@@ -130,6 +132,10 @@ class ScreenBrightnessControl : MethodChannel.MethodCallHandler {
         val localLayoutParams: WindowManager.LayoutParams? = localWindow?.attributes
         localLayoutParams?.screenBrightness = currentBrightness
         localWindow?.attributes = localLayoutParams
+        result.success(null)
+    }
+
+    fun setEnabledAutoKeep(@NonNull call: MethodCall, @NonNull result: MethodChannel.Result) {
         result.success(null)
     }
 
