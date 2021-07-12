@@ -13,6 +13,7 @@ class ScreenBrightnessControl: NSObject, FlutterPlugin, FlutterApplicationLifeCy
     var channel: FlutterMethodChannel?
     var recordBrightness: CGFloat?
     var changedBrightness: CGFloat?
+    var enabledAutoKeep: Bool = false
     
     static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(name: "com.haijunwei.native_kit/screen_brightness_control", binaryMessenger: registrar.messenger())
@@ -40,6 +41,8 @@ class ScreenBrightnessControl: NSObject, FlutterPlugin, FlutterApplicationLifeCy
             record(result: result)
         } else if call.method == "restore" {
             restore(result: result)
+        } else if call.method == "setEnabledAutoKeep" {
+            setEnabledAutoKeep(call, result: result)
         }
     }
     
@@ -66,7 +69,13 @@ class ScreenBrightnessControl: NSObject, FlutterPlugin, FlutterApplicationLifeCy
         result(nil)
     }
     
+    func setEnabledAutoKeep(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+        enabledAutoKeep = (call.arguments as? [String : Any])?["enabled"] as? Bool ?? false
+        result(nil)
+    }
+    
     func onApplicationResume() {
+        if !enabledAutoKeep { return }
         if let brightness = changedBrightness {
             UIScreen.main.brightness = brightness
         }
@@ -74,6 +83,7 @@ class ScreenBrightnessControl: NSObject, FlutterPlugin, FlutterApplicationLifeCy
     }
     
     func onApplicationPause() {
+        if !enabledAutoKeep { return }
         if (changedBrightness == nil) {
             changedBrightness = UIScreen.main.brightness
         }

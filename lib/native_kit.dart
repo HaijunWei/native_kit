@@ -64,8 +64,8 @@ class ScreenBrightnessControl {
 
   static Future<dynamic> _methodCallHandler(call) async {
     if (call.method == 'brightnessDidChange') {
-      double volume = call.arguments['brightness'];
-      _streamController.add(volume);
+      double brightness = call.arguments['brightness'];
+      _streamController.add(brightness);
     }
   }
 
@@ -88,5 +88,10 @@ class ScreenBrightnessControl {
   /// 还原上次记录的亮度
   static Future<void> restore() async {
     await _channel.invokeMethod('restore');
+  }
+
+  /// 是否启用自动管理亮度，App进入后台时还原亮度，App进入前台时保持亮度
+  static Future<void> setEnabledAutoKeep(bool enabled) async {
+    await _channel.invokeMethod('setEnabledAutoKeep', {'enabled': enabled});
   }
 }
