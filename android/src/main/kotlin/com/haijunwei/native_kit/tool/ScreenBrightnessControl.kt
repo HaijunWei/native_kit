@@ -26,7 +26,6 @@ class ScreenBrightnessControl : MethodChannel.MethodCallHandler {
     private var channel: MethodChannel? = null
     private var context: Context? = null
     private var activityBinding: ActivityPluginBinding? = null
-    private var currentBrightness = -1f
 
     companion object {
         val instance: ScreenBrightnessControl by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
@@ -118,13 +117,6 @@ class ScreenBrightnessControl : MethodChannel.MethodCallHandler {
      * 记录当前亮度
      */
     fun record(@NonNull call: MethodCall, @NonNull result: MethodChannel.Result) {
-        currentBrightness = -1f
-        try {
-            currentBrightness = Settings.System.getInt(context?.contentResolver, Settings.System.SCREEN_BRIGHTNESS).toFloat()
-            currentBrightness /= 255.0f
-        } catch (e: Settings.SettingNotFoundException) {
-            e.printStackTrace()
-        }
         result.success(null)
     }
 
@@ -147,7 +139,6 @@ class ScreenBrightnessControl : MethodChannel.MethodCallHandler {
     private val mBrightnessObserver: ContentObserver = object : ContentObserver(Handler()) {
         override fun onChange(selfChange: Boolean) {
             super.onChange(selfChange)
-            Log.d("mBrightnessObserver","mBrightnessObserver->$selfChange")
             var systemBrightness = 0.0
             try {
                 systemBrightness = Settings.System.getInt(context?.contentResolver, Settings.System.SCREEN_BRIGHTNESS).toDouble()
@@ -155,7 +146,6 @@ class ScreenBrightnessControl : MethodChannel.MethodCallHandler {
                 e.printStackTrace()
             }
             systemBrightness /= 255.0
-            Log.d("mBrightnessObserver","mBrightnessObserver:systemBrightness->$systemBrightness")
 
             if(selfChange){
                 val localWindow: Window? = activityBinding?.activity?.window

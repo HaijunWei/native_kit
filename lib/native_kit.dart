@@ -80,12 +80,12 @@ class ScreenBrightnessControl {
     await _channel.invokeMethod('setBrightness', {'brightness': brightness});
   }
 
-  /// 记录当前亮度
+  /// 记录当前亮度，在安卓上无效
   static Future<void> record() async {
     await _channel.invokeMethod('record');
   }
 
-  /// 还原上次记录的亮度
+  /// 还原上次记录的亮度，还原上次记录的亮度，安卓还原到系统亮度
   static Future<void> restore() async {
     await _channel.invokeMethod('restore');
   }
