@@ -101,7 +101,6 @@ class ScreenBrightnessControl : MethodChannel.MethodCallHandler {
             return
         }
 
-        Log.d("setBrightness", "brightness->${brightness.toFloat()}")
         val localWindow: Window? = activityBinding?.activity?.window
         val localLayoutParams: WindowManager.LayoutParams? = localWindow?.attributes
         localLayoutParams?.screenBrightness = brightness.toFloat()
@@ -145,6 +144,12 @@ class ScreenBrightnessControl : MethodChannel.MethodCallHandler {
                 e.printStackTrace()
             }
             systemBrightness /= 255.0
+
+            val localWindow: Window? = activityBinding?.activity?.window
+            val localLayoutParams: WindowManager.LayoutParams? = localWindow?.attributes
+            localLayoutParams?.screenBrightness = systemBrightness.toFloat()
+            localWindow?.attributes = localLayoutParams
+
             val map = hashMapOf<String, Any>()
             map["brightness"] = systemBrightness
             channel?.invokeMethod("brightnessDidChange", map)
