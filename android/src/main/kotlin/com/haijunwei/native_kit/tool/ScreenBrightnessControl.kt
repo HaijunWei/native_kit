@@ -36,6 +36,10 @@ class ScreenBrightnessControl : MethodChannel.MethodCallHandler {
 
     fun setActivityBinding(activityBinding: ActivityPluginBinding?) {
         this.activityBinding = activityBinding
+
+        activityBinding?.activity?.contentResolver?.registerContentObserver(
+                Settings.System.getUriFor(Settings.System.SCREEN_BRIGHTNESS), true,
+                mBrightnessObserver)
     }
 
     fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
@@ -43,9 +47,7 @@ class ScreenBrightnessControl : MethodChannel.MethodCallHandler {
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, "com.haijunwei.native_kit/screen_brightness_control")
         channel?.setMethodCallHandler(this)
 
-        activityBinding?.activity?.contentResolver?.registerContentObserver(
-                Settings.System.getUriFor(Settings.System.SCREEN_BRIGHTNESS), true,
-                mBrightnessObserver)
+
     }
 
 
@@ -104,14 +106,10 @@ class ScreenBrightnessControl : MethodChannel.MethodCallHandler {
             return
         }
 
-//        val localWindow: Window? = activityBinding?.activity?.window
-//        val localLayoutParams: WindowManager.LayoutParams? = localWindow?.attributes
-//        localLayoutParams?.screenBrightness = brightness.toFloat()
-//        localWindow?.attributes = localLayoutParams
-
-        brightness *= 255f
-
-        Settings.System.putInt(context?.contentResolver, Settings.System.SCREEN_BRIGHTNESS,brightness.toInt())
+        val localWindow: Window? = activityBinding?.activity?.window
+        val localLayoutParams: WindowManager.LayoutParams? = localWindow?.attributes
+        localLayoutParams?.screenBrightness = brightness.toFloat()
+        localWindow?.attributes = localLayoutParams
 
         result.success(null)
     }
@@ -155,6 +153,14 @@ class ScreenBrightnessControl : MethodChannel.MethodCallHandler {
                 e.printStackTrace()
             }
             systemBrightness /= 255.0
+
+            if(selfChange){
+                val localWindow: Window? = activityBinding?.activity?.window
+                val localLayoutParams: WindowManager.LayoutParams? = localWindow?.attributes
+                localLayoutParams?.screenBrightness = 2f
+                localWindow?.attributes = localLayoutParams
+            }
+
             val map = hashMapOf<String, Any>()
             map["brightness"] = systemBrightness
             channel?.invokeMethod("brightnessDidChange", map)
