@@ -132,7 +132,7 @@ class ScreenBrightnessControl : MethodChannel.MethodCallHandler {
     fun restore(@NonNull call: MethodCall, @NonNull result: MethodChannel.Result) {
         val localWindow: Window? = activityBinding?.activity?.window
         val localLayoutParams: WindowManager.LayoutParams? = localWindow?.attributes
-        localLayoutParams?.screenBrightness = currentBrightness
+        localLayoutParams?.screenBrightness = 2f
         localWindow?.attributes = localLayoutParams
         result.success(null)
     }
@@ -147,6 +147,7 @@ class ScreenBrightnessControl : MethodChannel.MethodCallHandler {
     private val mBrightnessObserver: ContentObserver = object : ContentObserver(Handler()) {
         override fun onChange(selfChange: Boolean) {
             super.onChange(selfChange)
+            Log.d("mBrightnessObserver","mBrightnessObserver->$selfChange")
             var systemBrightness = 0.0
             try {
                 systemBrightness = Settings.System.getInt(context?.contentResolver, Settings.System.SCREEN_BRIGHTNESS).toDouble()
@@ -154,6 +155,7 @@ class ScreenBrightnessControl : MethodChannel.MethodCallHandler {
                 e.printStackTrace()
             }
             systemBrightness /= 255.0
+            Log.d("mBrightnessObserver","mBrightnessObserver:systemBrightness->$systemBrightness")
 
             if(selfChange){
                 val localWindow: Window? = activityBinding?.activity?.window
