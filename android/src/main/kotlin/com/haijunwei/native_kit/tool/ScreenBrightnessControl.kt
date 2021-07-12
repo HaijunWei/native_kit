@@ -98,16 +98,20 @@ class ScreenBrightnessControl : MethodChannel.MethodCallHandler {
      * 设置当前屏幕亮度
      */
     fun setBrightness(@NonNull call: MethodCall, @NonNull result: MethodChannel.Result) {
-        val brightness: Double? = call.argument("brightness")
+        var brightness: Double? = call.argument("brightness")
         if (brightness == null) {
             result.error("-1", "brightness cannot be empty", "brightness cannot be empty")
             return
         }
 
-        val localWindow: Window? = activityBinding?.activity?.window
-        val localLayoutParams: WindowManager.LayoutParams? = localWindow?.attributes
-        localLayoutParams?.screenBrightness = brightness.toFloat()
-        localWindow?.attributes = localLayoutParams
+//        val localWindow: Window? = activityBinding?.activity?.window
+//        val localLayoutParams: WindowManager.LayoutParams? = localWindow?.attributes
+//        localLayoutParams?.screenBrightness = brightness.toFloat()
+//        localWindow?.attributes = localLayoutParams
+
+        brightness *= 255f
+
+        Settings.System.putInt(context?.contentResolver, Settings.System.SCREEN_BRIGHTNESS,brightness.toInt())
 
         result.success(null)
     }
@@ -151,12 +155,6 @@ class ScreenBrightnessControl : MethodChannel.MethodCallHandler {
                 e.printStackTrace()
             }
             systemBrightness /= 255.0
-
-            val localWindow: Window? = activityBinding?.activity?.window
-            val localLayoutParams: WindowManager.LayoutParams? = localWindow?.attributes
-            localLayoutParams?.screenBrightness = systemBrightness.toFloat()
-            localWindow?.attributes = localLayoutParams
-
             val map = hashMapOf<String, Any>()
             map["brightness"] = systemBrightness
             channel?.invokeMethod("brightnessDidChange", map)

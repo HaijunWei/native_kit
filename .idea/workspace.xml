@@ -6,6 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="112017b2-7524-4da1-aef2-c4b2a830d44e" name="默认的" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/main/kotlin/com/haijunwei/native_kit/tool/ScreenBrightnessControl.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/kotlin/com/haijunwei/native_kit/tool/ScreenBrightnessControl.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
