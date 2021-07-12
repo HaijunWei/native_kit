@@ -146,6 +146,7 @@ class ScreenBrightnessControl : MethodChannel.MethodCallHandler {
      */
     private val mBrightnessObserver: ContentObserver = object : ContentObserver(Handler()) {
         override fun onChange(selfChange: Boolean) {
+            super.onChange(selfChange)
             var systemBrightness = 0.0
             try {
                 systemBrightness = Settings.System.getInt(context?.contentResolver, Settings.System.SCREEN_BRIGHTNESS).toDouble()
