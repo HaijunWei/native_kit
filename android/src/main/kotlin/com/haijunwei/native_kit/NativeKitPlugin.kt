@@ -19,7 +19,6 @@ class NativeKitPlugin : FlutterPlugin, ActivityAware {
     ///
     /// This local reference serves to register the plugin with the Flutter Engine and unregister it
     /// when the Flutter Engine is detached from the Activity
-    private lateinit var channel: MethodChannel
     private var activityBinding: ActivityPluginBinding? = null
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
@@ -29,7 +28,6 @@ class NativeKitPlugin : FlutterPlugin, ActivityAware {
     }
 
     override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
-        channel.setMethodCallHandler(null)
         AppInstaller.instance.onDetachedFromEngine(binding)
         VolumeControl.instance.onDetachedFromEngine(binding)
         ScreenBrightnessControl.instance.onDetachedFromEngine(binding)
