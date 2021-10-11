@@ -12,6 +12,7 @@ import MediaPlayer
 
 public class VolumeControl: NSObject, FlutterPlugin {
     let volumeView = MPVolumeView()
+    var volumeSlider: UISlider?
     var channel: FlutterMethodChannel?
     private var isHideUI = false
     
@@ -24,8 +25,14 @@ public class VolumeControl: NSObject, FlutterPlugin {
     
     override init() {
         super.init()
-        NotificationCenter.default.addObserver(self, selector: #selector(volumeDidChange(notification:)), name: NSNotification.Name(rawValue: "AVSystemController_SystemVolumeDidChangeNotification"), object: nil)
         UIApplication.shared.beginReceivingRemoteControlEvents();
+        for item in volumeView.subviews {
+            if item is UISlider {
+                volumeSlider = (item as! UISlider)
+                break
+            }
+        }
+        volumeSlider?.addTarget(self, action: #selector(volumeDidChange), for: .valueChanged)
     }
     
     deinit {
@@ -54,18 +61,8 @@ public class VolumeControl: NSObject, FlutterPlugin {
     func setVolume(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         let arguments = call.arguments as? [String : Any]
         let volume = arguments?["volume"] as? Double ?? 0
-        var slider: UISlider?
-        for item in volumeView.subviews {
-            if item is UISlider {
-                slider = (item as! UISlider)
-                break
-            }
-        }
-        if slider == nil {
-            result(FlutterError(code: "-1", message: "未获取到系统音量条", details: "未获取到系统音量条"))
-            return
-        }
-        slider!.setValue((Float)(volume), animated: false)
+        volumeSlider?.setValue((Float)(volume), animated: false)
+        volumeDidChange()
         result(nil)
     }
     
@@ -84,8 +81,8 @@ public class VolumeControl: NSObject, FlutterPlugin {
         result(nil)
     }
     
-    @objc func volumeDidChange(notification: NSNotification) {
-        let volume = notification.userInfo!["AVSystemController_AudioVolumeNotificationParameter"] as! Float
+    @objc func volumeDidChange() {
+        let volume = volumeSlider?.value ?? 0
         channel?.invokeMethod("volumeDidChange", arguments: ["volume": volume])
     }
 }
