@@ -59,15 +59,6 @@ class AppInstaller : MethodCallHandler {
         }
 
         context?.apply {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                // 判断是否有权限
-                val haveInstallPermission: Boolean = packageManager.canRequestPackageInstalls()
-                if (!haveInstallPermission) {
-                    result.error("-1", "", "path cannot be empty")
-                    return
-                }
-            }
-
             val apkFile = File(filePath)
             val installApkIntent = Intent()
             installApkIntent.action = Intent.ACTION_VIEW
