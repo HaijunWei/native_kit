@@ -14,7 +14,7 @@ class ClipboardExtension: NSObject, FlutterPlugin {
     
     static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(name: "com.haijunwei.native_kit/clipboard_extension", binaryMessenger: registrar.messenger())
-        let instance = ScreenBrightnessControl()
+        let instance = ClipboardExtension()
         instance.channel = channel
         registrar.addMethodCallDelegate(instance, channel: channel)
     }
