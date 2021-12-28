@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/services.dart';
 
@@ -85,7 +86,7 @@ class ScreenBrightnessControl {
     await _channel.invokeMethod('record');
   }
 
-  /// 还原上次记录的亮度，还原上次记录的亮度，安卓还原到系统亮度
+  /// 还原上次记录的亮度，还原上次记录的亮度，安卓还原到系统亮度
   static Future<void> restore() async {
     await _channel.invokeMethod('restore');
   }
@@ -93,5 +94,18 @@ class ScreenBrightnessControl {
   /// 是否启用自动管理亮度，App进入后台时还原亮度，App进入前台时保持亮度
   static Future<void> setEnabledAutoKeep(bool enabled) async {
     await _channel.invokeMethod('setEnabledAutoKeep', {'enabled': enabled});
+  }
+}
+
+class ClipboardExtension {
+  static const MethodChannel _channel =
+      const MethodChannel('com.haijunwei.native_kit/clipboard_extension');
+
+  static Future<int> get changeCount async {
+    int? count;
+    if (Platform.isIOS) {
+      count = await _channel.invokeMethod('getChangeCount');
+    }
+    return count ?? 0;
   }
 }
