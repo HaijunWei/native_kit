@@ -3,6 +3,7 @@ package com.haijunwei.native_kit.tool
 import android.content.Context
 import android.database.ContentObserver
 import android.os.Handler
+import android.os.PowerManager
 import android.provider.Settings
 import android.util.Log
 import android.view.Window
@@ -12,6 +13,8 @@ import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
+import java.io.Console
+import java.lang.reflect.Field
 
 
 /**
@@ -26,6 +29,7 @@ class ScreenBrightnessControl : MethodChannel.MethodCallHandler {
     private var channel: MethodChannel? = null
     private var context: Context? = null
     private var activityBinding: ActivityPluginBinding? = null
+    private var maximumBrightness = 0f
 
     companion object {
         val instance: ScreenBrightnessControl by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
@@ -45,8 +49,7 @@ class ScreenBrightnessControl : MethodChannel.MethodCallHandler {
         context = flutterPluginBinding.applicationContext
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, "com.haijunwei.native_kit/screen_brightness_control")
         channel?.setMethodCallHandler(this)
-
-
+        maximumBrightness = getScreenMaximumBrightness(flutterPluginBinding.applicationContext)
     }
 
 
@@ -86,13 +89,17 @@ class ScreenBrightnessControl : MethodChannel.MethodCallHandler {
      * 获取系统屏幕亮度
      */
     fun getBrightness(@NonNull call: MethodCall, @NonNull result: MethodChannel.Result) {
-        var systemBrightness = 0
-        try {
-            systemBrightness = Settings.System.getInt(context?.contentResolver, Settings.System.SCREEN_BRIGHTNESS)
-        } catch (e: Settings.SettingNotFoundException) {
-            e.printStackTrace()
+        val localWindow: Window? = activityBinding?.activity?.window
+        val localLayoutParams: WindowManager.LayoutParams? = localWindow?.attributes
+        var systemBrightness = localLayoutParams?.screenBrightness ?: 0f
+        if (systemBrightness < 0) {
+            try {
+                systemBrightness = Settings.System.getInt(context?.contentResolver, Settings.System.SCREEN_BRIGHTNESS) / maximumBrightness
+            } catch (e: Settings.SettingNotFoundException) {
+                e.printStackTrace()
+            }
         }
-        result.success(systemBrightness.toDouble() / 255.0)
+        result.success(systemBrightness)
     }
 
     /**
@@ -124,7 +131,7 @@ class ScreenBrightnessControl : MethodChannel.MethodCallHandler {
     fun restore(@NonNull call: MethodCall, @NonNull result: MethodChannel.Result) {
         val localWindow: Window? = activityBinding?.activity?.window
         val localLayoutParams: WindowManager.LayoutParams? = localWindow?.attributes
-        localLayoutParams?.screenBrightness = 2f
+        localLayoutParams?.screenBrightness = WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE
         localWindow?.attributes = localLayoutParams
         result.success(null)
     }
@@ -145,18 +152,37 @@ class ScreenBrightnessControl : MethodChannel.MethodCallHandler {
             } catch (e: Settings.SettingNotFoundException) {
                 e.printStackTrace()
             }
-            systemBrightness /= 255.0
+            systemBrightness /= maximumBrightness
 
             if(selfChange){
                 val localWindow: Window? = activityBinding?.activity?.window
                 val localLayoutParams: WindowManager.LayoutParams? = localWindow?.attributes
-                localLayoutParams?.screenBrightness = 2f
+                localLayoutParams?.screenBrightness = WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE
                 localWindow?.attributes = localLayoutParams
             }
 
             val map = hashMapOf<String, Any>()
             map["brightness"] = systemBrightness
             channel?.invokeMethod("brightnessDidChange", map)
+        }
+    }
+
+    private fun getScreenMaximumBrightness(context: Context): Float {
+        try {
+            val powerManager: PowerManager =
+                context.getSystemService(Context.POWER_SERVICE) as PowerManager?
+                    ?: throw ClassNotFoundException()
+            val fields: Array<Field> = powerManager.javaClass.declaredFields
+            for (field in fields) {
+                if (field.name.equals("BRIGHTNESS_ON")) {
+                    field.isAccessible = true
+                    return (field[powerManager] as Int).toFloat()
+                }
+            }
+
+            return 255.0f
+        } catch (e: Exception) {
+            return 255.0f
         }
     }
 }
