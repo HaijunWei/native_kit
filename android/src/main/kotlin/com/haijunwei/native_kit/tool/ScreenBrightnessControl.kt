@@ -95,7 +95,7 @@ class ScreenBrightnessControl : MethodChannel.MethodCallHandler {
         if (systemBrightness < 0) {
             try {
                 systemBrightness = Settings.System.getInt(context?.contentResolver, Settings.System.SCREEN_BRIGHTNESS) / maximumBrightness
-            } catch (e: Settings.SettingNotFoundException) {
+            } catch (e: Exception) {
                 e.printStackTrace()
             }
         }
@@ -149,7 +149,7 @@ class ScreenBrightnessControl : MethodChannel.MethodCallHandler {
             var systemBrightness = 0.0
             try {
                 systemBrightness = Settings.System.getInt(context?.contentResolver, Settings.System.SCREEN_BRIGHTNESS).toDouble()
-            } catch (e: Settings.SettingNotFoundException) {
+            } catch (e: Exception) {
                 e.printStackTrace()
             }
             systemBrightness /= maximumBrightness
